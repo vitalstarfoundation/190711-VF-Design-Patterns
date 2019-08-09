@@ -18,8 +18,9 @@ class Food(_price: Double) extends Valuable {
 
 class Meal(a: Food, b: Food, c: Food)  extends Valuable {
   def price: Double = a.price + b.price + c.price
-  def discountPrice(_discount: Double) = price * _discount
-  def cost = 2
+  def discountPrice(_discount: Double) = a.discountPrice(_discount) + b.discountPrice(_discount) + c.discountPrice(_discount)
+//  def discountPrice(_discount: Double) = price * _discount
+  def cost = a.cost + b.cost + c.cost
 }
 
 
@@ -30,12 +31,14 @@ class TestComposite extends FunSuite with BeforeAndAfterAll {
     val fry = new Food(1.95)
     val burger = new Food(3.40)
     val drink = new Food(1.5)
+    val breakfast = new Meal(fry, burger, drink)
 
     assertEquals(1.95, fry.price, 10e-5)
     assertEquals(1.56, fry.discounted80, 10e-5)
-
-    val breakfast = new Meal(fry, burger, drink)
     assertEquals(6.85, breakfast.price, 10e-5)
+
+    assertEquals(1, fry.cost, 10e-5)
+    assertEquals(3, breakfast.cost, 10e-5)
   }
 
 }
