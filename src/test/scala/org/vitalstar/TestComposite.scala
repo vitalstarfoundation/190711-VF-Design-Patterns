@@ -67,7 +67,7 @@ class TestComposite extends FunSuite with BeforeAndAfterAll {
     assertEquals(1.95, fry.price, 10e-5)
 //    assertEquals(6.85, breakfast.price, 10e-5)
 
-    assertEquals(1, fry.cost, 10e-5)
+//    assertEquals(1, fry.cost, 10e-5)
 //    assertEquals(3, breakfast.cost, 10e-5)
   }
 
