@@ -4,7 +4,6 @@ import org.scalatest.{FunSuite, BeforeAndAfterAll}
 import org.scalatest.junit.JUnitRunner
 import org.junit.Assert._
 import org.junit.runner.RunWith
-
 import collection.mutable.ListBuffer
 
 // We define a concept, which is behavior
@@ -20,22 +19,25 @@ trait FoodItemish {
 }
 
 // This is the implementation
-abstract class FoodItemImpl(_name: String ="", val _price: Double = 0.0) extends FoodItemish {
+abstract class FoodItemImpl(_name: String ="", val _price: Double = 0.0)
+    extends FoodItemish {
+
   override val name: String = _name
-  val items: ListBuffer[FoodItemish] = new ListBuffer[FoodItemish]()
-  override def addFoodItem(item: FoodItemish): Unit = items.append(item)
-  override def getFoodItems: List[FoodItemish] = items.toList
+  val bag: ListBuffer[FoodItemish] = new ListBuffer[FoodItemish]()
+
+  override def addFoodItem(item: FoodItemish): Unit = bag.append(item)
+  override def getFoodItems: List[FoodItemish] = bag.toList
   override def price: Double = {
     if (isSingle)
         _price
     else
-      items.foldLeft(0.0){(price: Double, i: FoodItemish) => i.price + price}
+      bag.foldLeft(0.0){(price: Double, i: FoodItemish) => i.price + price}
   }
   override def toString: String = name
 }
 
-class Toy extends FoodItemish {
-  def price = 100
+class Toy(name: String = "", _price: Double = 0.0)
+  extends FoodItemImpl(name, _price) {
 }
 
 class Food(name:String, _price: Double) extends FoodItemImpl(name, _price) {
@@ -65,10 +67,7 @@ class TestComposite extends FunSuite with BeforeAndAfterAll {
     breakfast.addFoodItem(ironman)
 
     assertEquals(1.95, fry.price, 10e-5)
-//    assertEquals(6.85, breakfast.price, 10e-5)
-
-//    assertEquals(1, fry.cost, 10e-5)
-//    assertEquals(3, breakfast.cost, 10e-5)
+    assertEquals(6.85, breakfast.price, 10e-5)
   }
 
 }
