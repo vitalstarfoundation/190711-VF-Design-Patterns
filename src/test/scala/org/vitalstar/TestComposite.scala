@@ -129,16 +129,19 @@ class TestComposite extends FunSuite with BeforeAndAfterAll {
     aug.replenish(List.fill(10)(burger))
     assertEquals(20, aug.numberOfItems)
 
+    earth.reset
+    aug = earth.getStore
+    assertEquals(0, aug.numberOfItems)
+
     aug = earth.getStore
     aug.replenish(List.fill(10)(drink))
-    assertEquals(30, aug.numberOfItems)
+    assertEquals(10, aug.numberOfItems)
 
     aug = earth.getStore
     aug.replenish(List.fill(10)(breakfast))
-    assertEquals(40, aug.numberOfItems)
+    assertEquals(20, aug.numberOfItems)
 
-    earth.getStore.order("fry")
-    assertEquals(39, aug.numberOfItems)
-
+    earth.getStore.order("soda")
+    assertEquals(19, aug.numberOfItems)
   }
 }
