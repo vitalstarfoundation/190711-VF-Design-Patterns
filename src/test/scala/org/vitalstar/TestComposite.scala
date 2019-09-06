@@ -89,6 +89,7 @@ class TestComposite extends FunSuite with BeforeAndAfterAll {
   val fry = new Food("fry",1.95)
   val burger = new Food("double double",3.40)
   val drink = new Food("soda", 1.5)
+  val ironman = new Toy("ironman",0)
   val breakfast = new Meal("snack")
   breakfast.addItem(fry)
   breakfast.addItem(burger)
@@ -108,13 +109,14 @@ class TestComposite extends FunSuite with BeforeAndAfterAll {
     store.replenish(List.fill(10)(fry))
     store.replenish(List.fill(10)(burger))
     store.replenish(List.fill(10)(drink))
+    store.replenish(List.fill(10)(ironman))
     store.replenish(List.fill(10)(breakfast))
 
     val food = store.order("fry")
-    assertEquals(39, store.numberOfItems)
+    assertEquals(49, store.numberOfItems)
 
     val meal = store.order("snack")
-    assertEquals(38, store.numberOfItems)
+    assertEquals(48, store.numberOfItems)
   }
 
   test("singleton") {
