@@ -63,7 +63,11 @@ class Toy(name: String = "", _price: Double = 0.0)
   extends ItemBase(name, "plastics", _price) {
 }
 
-class Store(address: String) {
+trait Store {
+  def order(name: String): Item = ???
+}
+
+class StoreBase(address: String) {
   val shelf: ListBuffer[Item] = new ListBuffer[Item]()
   def replenish(items: List[Item]): Unit = shelf.appendAll(items)
   def numberOfItems = shelf.length
@@ -80,17 +84,21 @@ class Store(address: String) {
 }
 
 class World {
-  private var aug: Store = null
+  private var aug: StoreBase = null
 
-  def getStore: Store = {
+  def getStore: StoreBase = {
     if (aug == null) {
-      aug = new Store("1500 Augustine drive")
+      aug = new StoreBase("1500 Augustine drive")
     }
     aug
   }
 
   def reset = {
     aug = null
+  }
+
+  def born(character:String = "", allergy: String= "xxx"): Customer = {
+    null
   }
 }
 
@@ -99,27 +107,59 @@ trait Customer {
 }
 
 class CustomerBase(allergy: String = "") extends Customer {
-  def isAllergic(item: Item): Boolean = {
+  protected def isAllergic(item: Item): Boolean = {
     item.ingredient.contains(allergy)
   }
 
-  def canYouAfford(item: Item): Boolean = {
+  protected def canYouAfford(item: Item): Boolean = {
     item.price < 5
   }
 
 }
 
-class Patient(allergy: String = "") extends CustomerBase(allergy) {
+class Patient(allergy: String = "xxx") extends CustomerBase(allergy) {
   override def doYouLike(item: Item): Boolean = {
     !isAllergic(item)
   }
 }
 
-class Kid(allergy: String = "") extends CustomerBase(allergy) {
+class Kid(allergy: String = "xxx") extends CustomerBase(allergy) {
   override def doYouLike(item: Item): Boolean = {
     canYouAfford(item)
   }
 }
+
+class KidPatient(allergy: String = "xxx") extends CustomerBase(allergy) {
+  override def doYouLike(item: Item): Boolean = {
+    canYouAfford(item) && !isAllergic(item)
+  }
+}
+
+class KidPatient1(allergy: String = "xxx") extends CustomerBase(allergy) {
+  val a: Kid = new Kid(allergy)
+  val b: Patient = new Patient(allergy)
+  override def doYouLike(item: Item): Boolean = {
+    a.doYouLike(item) && b.doYouLike(item)
+  }
+}
+
+trait FoodDelivery extends Store {
+}
+
+class FoodDeliveryBase(store: Store) extends FoodDelivery {
+  override def order(name: String): Item = {
+    store.order(name)
+  }
+}
+
+class UberEat(store: Store) extends FoodDeliveryBase(store) {
+
+}
+
+class DoorDash(store: Store) extends FoodDeliveryBase(store) {
+
+}
+
 
 @RunWith(classOf[JUnitRunner])
 class TestComposite extends FunSuite with BeforeAndAfterAll {
@@ -127,16 +167,23 @@ class TestComposite extends FunSuite with BeforeAndAfterAll {
 
   // Create some items
   val fry = new Food("fry","potatos",1.95)
-  val burger = new Food("double double","beef bread condiment pickle tomato onion",3.40)
+  val burger = new Food("double double","beef gluten bread condiment pickle tomato onion",3.40)
   val drink = new Food("soda", "sugar water co2",1.5)
   val ironman = new Toy("ironman",0)
   val breakfast = new Meal("snack")
   breakfast.addItem(fry)
   breakfast.addItem(burger)
   breakfast.addItem(drink)
+
   val john = new Patient("pickle")
-  val jonathan = new Kid()
+  val matthew = new Kid("")
+  val jonathan = new KidPatient("gluten")
   val amour = new Patient("onion")
+
+	val matthew1: Customer = earth.born("kid", "xxx")
+	val john1: Customer = earth.born("patient", "pickle")
+	val jonathan1 = earth.born("kid patient boss wife husband", "gluten")
+	val amour1 = earth.born("patient", "onion")
 
   test("Encapsulation") {
     val ironman = new Toy
@@ -148,7 +195,7 @@ class TestComposite extends FunSuite with BeforeAndAfterAll {
 
   test("create store") {
     // Create a store
-    val store = new Store("1500 Augustine drive")
+    val store = new StoreBase("1500 Augustine drive")
     store.replenish(List.fill(10)(fry))
     store.replenish(List.fill(10)(burger))
     store.replenish(List.fill(10)(drink))
