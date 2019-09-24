@@ -44,6 +44,7 @@ class ItemBase(_name: String ="", _ingredient: String = "", val _price: Double =
 
   override def doYouLikeMe(customer: Customer): Boolean = {
     customer.doYouLike(this)
+//    customer.doYouLike(_ingredient)
   }
 
   override def toString: String = name
@@ -160,7 +161,6 @@ class DoorDash(store: Store) extends FoodDeliveryBase(store) {
 
 }
 
-
 @RunWith(classOf[JUnitRunner])
 class TestComposite extends FunSuite with BeforeAndAfterAll {
   val earth = new World()
@@ -180,10 +180,10 @@ class TestComposite extends FunSuite with BeforeAndAfterAll {
   val jonathan = new KidPatient("gluten")
   val amour = new Patient("onion")
 
-	val matthew1: Customer = earth.born("kid", "xxx")
-	val john1: Customer = earth.born("patient", "pickle")
-	val jonathan1 = earth.born("kid patient boss wife husband", "gluten")
-	val amour1 = earth.born("patient", "onion")
+  val matthew1: Customer = earth.born("kid", "xxx")
+  val john1: Customer = earth.born("patient", "pickle")
+  val jonathan1 = earth.born("kid patient boss wife husband", "gluten")
+  val amour1 = earth.born("patient", "onion")
 
   test("Encapsulation") {
     val ironman = new Toy
@@ -248,7 +248,110 @@ class TestComposite extends FunSuite with BeforeAndAfterAll {
       breakfast.addItem(drink)
 
     assertEquals("potatos beef bread condiment pickle tomato onion sugar water co2", breakfast.ingredient)
-
-
   }
+
+  test("builder pattern") {
+/*
+  class Potatos extends Ingredient
+  val potatos = new Potatos
+
+   val fry = new Food("fry","potatos salt oil",1.95)
+   val fry = (new Food)
+                  .addIngredient("salt")
+                  .addIngredient("oil")
+                  .setName("fry")
+                  .addIngredient(potatos)
+                  .addIngredient(poison)
+                  .setPrice(1.95)
+                  .prepare
+   val fry = (new Food)
+                  .setName("fry")
+                  .addIngredient("potatos salt oil")
+                  .setPrice(1.95)
+                  .prepare
+*/
+  }
+
+  test("iterator pattern") {
+/*
+     val fry = (new Food)
+                  .addIngredient("salt")
+                  .addIngredient("oil")
+                  .setName("fry")
+                  .addIngredient(potatos)
+                  .addIngredient(poison)
+                  .setPrice(1.95)
+                  .prepare
+
+    val ingd: IngredientIterator = fry.createIngredientIterator
+    val i1 = ingd.next
+    val i2 = ingd.next
+    val i3 = ingd.next
+    val i4 = ingd.next
+
+    class IngredientIterator {
+      val item: Food
+      val counter: Int
+      def next: IngredientIterator = ...
+      def hasNext: Boolean = ...
+      def reset
+      def map()
+    }
+*/
+  }
+
+  test("poison food detector") {
+/*
+    class Milk extends Ingredient
+    class Vinegar extends Ingredient
+
+    val milk = Milk()
+    val vinegar = Vinegar()
+    val potatos = ..
+    val salt = ...
+
+   val mm: Food = (new Food)
+            .addIngredient("???")
+            .addIngredient("oil")
+            .setName("fry")
+            .addIngredient(potatos)
+            .addIngredient(poison)
+            .setPrice(1.95)
+            .prepare
+
+    val mm = new Food
+    val detector = poisonDetector()
+
+    val poisonous = detector.detect(mm)
+    val poisonous =  mm.use(detector)
+
+    class Food {
+      def use(detector: Detector): Boolean = {
+        val i = createIngredientIterator
+        i.map{e => detector.detecte(e)}.hasTrue    // [false, false, false, false]
+      }
+
+    }
+
+    class Detector {
+      def detect(mm: Item): Boolean = {
+        mm.use(this)
+      }
+    }
+
+    class MVDetector extends Detector {
+      val milk = Milk()
+      val vinegar = Vinegar()
+      val deathly: Set = Set(milk, vinegar)
+
+      def detect(i: Ingredient): Boolen = {
+        deadthly.remove(i)
+        deathly.isEmpty
+      }
+
+      class glutenDetector extends Detector
+    }
+*/
+  }
+
 }
